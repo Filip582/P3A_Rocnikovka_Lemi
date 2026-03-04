@@ -4,17 +4,16 @@ import { useState, useActionState } from "react";
 import Lemi from "@/components/Lemi-mascot";
 export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [state, formAction, isPending] = useActionState(
-    isSignUp ? signUp : login,
-    { error: null },
-  );
+  const [state, formAction] = useActionState(isSignUp ? signUp : login, {
+    error: null,
+  });
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-6 py-12">
       <div className="w-full max-w-sm">
         <div className="mb-10 flex flex-col items-center gap-3">
           <Lemi size="xl" expression="excited" />
           <h1 className="text-balance text-center text-3xl font-bold tracking-tight text-foreground">
-            Welcome to Lemi!
+            {isSignUp ? "Create an account" : "Welcome back!"}
           </h1>
           <p className="text-center text-sm text-muted-foreground">
             Track your trampoline training like never before.
@@ -93,7 +92,6 @@ export default function LoginPage() {
               focusable="false"
               data-prefix="fab"
               data-icon="google"
-              role="img"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 488 512"
             >
