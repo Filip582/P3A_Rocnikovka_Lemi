@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import SmartKeyboard from "@/components/SmartKeyboard";
-import { Zap } from "lucide-react";
+import { Check, Copy, Zap } from "lucide-react";
 
 type Skill = {
   id: string;
@@ -54,6 +54,18 @@ export default function LogPage() {
       setCurrentInput((prev) => prev + key);
     }
   };
+  const handleConfirmRound = () => {
+    if (currentRoundSkills.length === 0 ) return
+
+    const newRound: Round = {
+        id: uuidv4(),
+        skills: currentRoundSkills,
+        total_difficulty: currentRoundSkills.reduce((acc, skill) => acc + skill.difficulty, 0)
+    }
+    setRounds((prev) => [...prev, newRound])
+    setCurrentRoundSkills([])
+    setCurrentInput("")
+  }
   return (
     <div className="min-h-screen pb-12">
       <div className="max-w-md mx-auto p-4 pt-8 flex flex-col gap-6">
@@ -76,18 +88,57 @@ export default function LogPage() {
               <Zap className="w-5 h-5 fill-white" />
             </button>
           </div>
-          <p className="text-sm text-muted-foreground">Press Space or Enter to add. Tip: Type &apos; - &apos; alone to record your 10-jump max time.</p>
+          <p className="text-sm text-muted-foreground">
+            Press Space or Enter to add. Tip: Type &apos; - &apos; alone to
+            record your 10-jump max time.
+          </p>
         </div>
-        <p>
-          Current round skills:{" "}
-          {currentRoundSkills.map((skill) => skill.fig_code)}
-        </p>
+        {currentRoundSkills.length > 0 && (
+          <div className="border border-orange-200 border-dashed rounded-xl p-4 flex flex-col gap-4 bg-orange-50/50">
+            <div className="flex justify-between items-center">
+              <p className="font-semibold text-xs text-muted-foreground uppercase tracking-widest">
+                Current round ({currentRoundSkills.length} skills)
+              </p>
+              <p className="text-primary text-sm font-semibold">
+                Total DD: 0.5
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {currentRoundSkills.map((skill) => (
+                <span
+                  key={skill.id}
+                  className="bg-white/80 border border-slate-200 text-slate-700 font-mono text-sm shadow-sm font-medium rounded-full px-3 py-1.5"
+                >
+                  {skill.fig_code}
+                </span>
+              ))}
+            </div>
+
+            <button onClick={() => handleConfirmRound()} className="w-full mt-2 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-bold flex items-center justify-center gap-2 transition-colors shadow-sm">
+              <Check className="w-5 h-5" />
+              Confirm Round
+            </button>
+          </div>
+        )}
         <p>
           Rounds:{" "}
           {rounds.map((round) => round.skills.map((skill) => skill.fig_code))}
         </p>
-        <h1>Log</h1>
+
         <SmartKeyboard onKeyPress={handleKeyPress} />
+
+        <div className="mt-4 flex gap-3">
+          <button className="flex-1 py-3 bg-white border border-border text-slate-600 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors shadow-sm">
+            <Copy className="w-5 h-5" />
+            Duplicate Last
+          </button>
+
+          <button className="flex-[1.5] py-3 bg-slate-400 text-white rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-slate-500 transition-colors shadow-sm focus:ring-2 focus:ring-slate-400 focus:outline-none">
+            <Check className="w-5 h-5" />
+            Finish Session
+          </button>
+        </div>
       </div>
     </div>
   );

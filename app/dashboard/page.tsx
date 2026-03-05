@@ -53,7 +53,7 @@ export default async function DashboardPage() {
 
       <Link
         href="/dashboard/sessions"
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 p-4 font-bold text-white shadow-md transition-transform hover:scale-[1.02]"
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary p-4 font-bold text-white shadow-md transition-transform hover:scale-[1.02]"
       >
         <Zap className="h-5 w-5 fill-current" />
         START NEW TRAINING SESSION
